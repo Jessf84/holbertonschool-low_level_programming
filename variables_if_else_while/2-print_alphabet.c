@@ -1,21 +1,31 @@
-#include "main.h"
+#include <unistd.h>
 
 /**
- * main - prints the alphabet in lowercase, followed by a new line.
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ */
+int _putchar(char c)
+{
+ return (write(1, &c, 1));
+}
+
+/**
+ * main - prints the alphabet in lowercase
  *
  * Return: Always 0 (Success)
  */
 int main(void)
 {
-	char letter;
+	char ch;
 	
-	for (letter = 'a'; letter <= 'z'; letter++)
+	for (ch = 'a'; ch <= 'z'; ch++)
 {
-		_putchar(letter);
+		_putchar(ch);
 }
 	
 	_putchar('\n');
 	
 	return (0);
 }
-
