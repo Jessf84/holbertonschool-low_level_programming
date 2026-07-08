@@ -1,28 +1,28 @@
 #include <unistd.h>
 
 /**
- * main - Entry point
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
  *
- * Description: Prints the alphabet in lowercase using _putchar
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
+ */
+int _putchar(char c);
+
+/**
+ * main - Entry point
  *
  * Return: Always 0 (Success)
  */
-int main(void)
-{
- char ch;
+	int main(void)
+	{
 
- /* The prototype for the custom _putchar function */
- int _putchar(char c);
+	char ch;
 
- /* First use of _putchar: inside the loop to print the alphabet */
- for (ch = 'a'; ch <= 'z'; ch++)
- {
-  _putchar(ch);
- }
-
- /* Second use of _putchar: to print the newline character */
- _putchar('\n');
-
- return (0);
+	for (ch = 'a'; ch <= 'z'; ch++)
+	{
+		_putchar(ch);
+	}
+	_putchar('\n');
+	return (0);
 }
-
