@@ -8,22 +8,20 @@
 int _putchar(char c);
 
 /**
- * main - Entry point
- *
- * Description: Prints the alphabet in lowercase using _putchar
+ * main - prints the alphabet in lowercase
  *
  * Return: Always 0 (Success)
  */
 int main(void)
 {
- int ch = 'a';
+ char ch;
 
+ ch = 'a';
  while (ch <= 'z')
  {
   _putchar(ch);
   ch++;
  }
-
  _putchar('\n');
  return (0);
 }
