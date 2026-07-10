@@ -18,15 +18,14 @@ int _putchar(char c);
  */
 int main(void)
 {
-	char ch;
+ char ch;
 
-	for (ch = 'a'; ch <= 'z'; ch++)
-	{
-		_putchar(ch);
-	}
+ for (ch = 'a'; ch <= 'z'; ch++)
+ {
+  _putchar(ch);
+ }
 
-	_putchar('\n');
-
-	return (0);
+ _putchar('\n');
+ return (0);
 }
 
