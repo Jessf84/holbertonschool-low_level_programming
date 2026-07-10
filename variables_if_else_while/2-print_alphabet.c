@@ -1,16 +1,7 @@
-/**
- * _putchar - writes the character c to stdout
- * @c: The character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
-int _putchar(char c);
+#include "main.h"
 
 /**
- * main - Entry point
- *
- * Description: Prints the alphabet in lowercase using _putchar
+ * main - prints the alphabet in lowercase
  *
  * Return: Always 0 (Success)
  */
