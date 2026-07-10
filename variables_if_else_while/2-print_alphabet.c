@@ -1,5 +1,3 @@
-#include <unistd.h>
-
 /**
  * _putchar - writes the character c to stdout
  * @c: The character to print
@@ -10,21 +8,19 @@
 int _putchar(char c);
 
 /**
- * main - Entry point
- *
- * Description: Prints the alphabet in lowercase using _putchar
+ * main - prints the alphabet in lowercase
  *
  * Return: Always 0 (Success)
  */
 int main(void)
 {
- char ch;
+ int ch = 'a';
 
- for (ch = 'a'; ch <= 'z'; ch++)
+ while (ch <= 'z')
  {
   _putchar(ch);
+  ch++;
  }
-
  _putchar('\n');
  return (0);
 }
