@@ -8,7 +8,9 @@
 int _putchar(char c);
 
 /**
- * main - prints the alphabet in lowercase
+ * main - Entry point
+ *
+ * Description: Prints the alphabet in lowercase using _putchar
  *
  * Return: Always 0 (Success)
  */
@@ -21,6 +23,7 @@ int main(void)
   _putchar(ch);
   ch++;
  }
+
  _putchar('\n');
  return (0);
 }
