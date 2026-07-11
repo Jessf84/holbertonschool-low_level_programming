@@ -1,22 +1,15 @@
-#include <unistd.h>
 #include "main.h"
 
 /**
- * main - Entry point
- *
- * Return: Always 0 (Success)
+ * print_alphabet - Prints the alphabet in lowercase followed by a new line.
  */
-int main(void)
+void print_alphabet(void)
 {
-	char *str = "_putchar";
-	int i = 0;
+	char letter;
 
-	while (str[i] != '\0')
+	for (letter = 'a'; letter <= 'z'; letter++)
 	{
-	write(1, &str[i], 1);
-	i++;
+		_putchar(letter);
 	}
-	write(1, "\n", 1);
-
-	return (0);
+	_putchar('\n');
 }
