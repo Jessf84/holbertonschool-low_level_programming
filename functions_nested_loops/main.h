@@ -6,6 +6,7 @@ void print_alphabet(void);
 void print_alphabet_x10(void); /* Add this line */
 int _islower(int c);
 int _isalpha(int c); /* Add this line to your main.h */
+int print_sign(int n);
 
 
 #endif
