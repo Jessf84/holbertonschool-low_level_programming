@@ -1,25 +1,34 @@
 #include <stdio.h>
 
 /**
- * main - prints the multiplication table
- * Return: Always 0.
+ * print_table - Prints a multiplication table up to a specified size.
+ * @size: The size of the table to print.
+ *
+ * Description: Generates rows and columns of products from 1 up to size.
  */
-int main(void)
+void print_table(int size)
 {
-	int row, col, res;
+	int row, col;
 
-	for (row = 0; row <= 9; row++)
+	for (row = 1; row <= size; row++)
 	{
-		for (col = 0; col <= 9; col++)
+		for (col = 1; col <= size; col++)
 		{
-			res = row * col;
-			printf("%d", res);
-			if (col < 9)
-			{
-				printf("\t");
-			}
+			printf("%d ", row * col);
 		}
 		printf("\n");
 	}
+}
+
+/* -- DO NOT Modify the code below this line -- */
+
+/**
+ * main - Entry point of the program
+ *
+ * Return: Always 0 (Success)
+ */
+int main(void)
+{
+	print_table(4);
 	return (0);
 }
