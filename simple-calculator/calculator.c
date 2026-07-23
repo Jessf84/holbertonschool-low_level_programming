@@ -14,7 +14,7 @@ int main(void)
 	printf("2) Subtract\n");
 	printf("3) Multiply\n");
 	printf("4) Divide\n");
-	printf("0) Wuit\n");
+	printf("0) Quit\n");
 	printf("Choice: ");
 
 
