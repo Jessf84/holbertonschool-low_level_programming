@@ -1,26 +1,68 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include "dog.h"
 
 /**
- * main - Checks the new_dog function
+ * new_dog - Creates a new dog
+ * @name: Name of the dog
+ * @age: Age of the dog
+ * @owner: Owner of the dog
  *
- * Return: Always 0
+ * Return: Pointer to the new dog, or NULL if it fails
  */
-int main(void)
+dog_t *new_dog(char *name, float age, char *owner)
 {
-	dog_t *my_dog;
+	dog_t *dog;
+	int name_len;
+	int owner_len;
+	int i;
 
-	my_dog = new_dog("Poppy", 3.5, "Bob");
-	if (my_dog == NULL)
-		return (1);
+	if (name == NULL || owner == NULL)
+		return (NULL);
 
-	printf("My name is %s, and I am %.1f :) - Woof!\n",
-	       my_dog->name, my_dog->age);
+	name_len = 0;
+	while (name[name_len] != '\0')
+		name_len++;
 
-	free(my_dog->name);
-	free(my_dog->owner);
-	free(my_dog);
+	owner_len = 0;
+	while (owner[owner_len] != '\0')
+		owner_len++;
 
-	return (0);
+	dog = malloc(sizeof(dog_t));
+	if (dog == NULL)
+		return (NULL);
+
+	dog->name = malloc((name_len + 1) * sizeof(char));
+	if (dog->name == NULL)
+	{
+		free(dog);
+		return (NULL);
+	}
+
+	dog->owner = malloc((owner_len + 1) * sizeof(char));
+	if (dog->owner == NULL)
+	{
+		free(dog->name);
+		free(dog);
+		return (NULL);
+	}
+
+	i = 0;
+	while (name[i] != '\0')
+	{
+		dog->name[i] = name[i];
+		i++;
+	}
+	dog->name[i] = '\0';
+
+	i = 0;
+	while (owner[i] != '\0')
+	{
+		dog->owner[i] = owner[i];
+		i++;
+	}
+	dog->owner[i] = '\0';
+
+	dog->age = age;
+
+	return (dog);
 }
