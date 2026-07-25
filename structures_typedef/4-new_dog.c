@@ -2,31 +2,59 @@
 #include "dog.h"
 
 /**
- * new_dog - Creates a new dog without using forbidden library functions
- * @name: Name of the dog
- * @age: Age of the dog
- * @owner: Owner of the dog
+ * _strlen - Calculates the length of a string.
+ * @s: The string to check.
  *
- * Return: Pointer to the new dog, or NULL if it fails
+ * Return: The length of the string.
  */
-__attribute__((optimize("O0")))
+static int _strlen(char *s)
+{
+	int len = 0;
+
+	while (s[len] != '\0')
+		len++;
+	return (len);
+}
+
+/**
+ * _strcpy - Copies a string from src to dest.
+ * @dest: The destination buffer.
+ * @src: The source string.
+ *
+ * Return: Pointer to dest.
+ */
+static char *_strcpy(char *dest, char *src)
+{
+	int i = 0;
+
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+/**
+ * new_dog - Creates a new dog structure.
+ * @name: Name of the dog.
+ * @age: Age of the dog.
+ * @owner: Owner of the dog.
+ *
+ * Return: Pointer to the new dog, or NULL if it fails.
+ */
 dog_t *new_dog(char *name, float age, char *owner)
 {
 	dog_t *dog;
 	int name_len;
 	int owner_len;
-	int i;
 
 	if (name == NULL || owner == NULL)
 		return (NULL);
 
-	name_len = 0;
-	while (name[name_len] != '\0')
-		name_len++;
-
-	owner_len = 0;
-	while (owner[owner_len] != '\0')
-		owner_len++;
+	name_len = _strlen(name);
+	owner_len = _strlen(owner);
 
 	dog = malloc(sizeof(dog_t));
 	if (dog == NULL)
@@ -47,22 +75,8 @@ dog_t *new_dog(char *name, float age, char *owner)
 		return (NULL);
 	}
 
-	i = 0;
-	while (name[i] != '\0')
-	{
-		dog->name[i] = name[i];
-		i++;
-	}
-	dog->name[i] = '\0';
-
-	i = 0;
-	while (owner[i] != '\0')
-	{
-		dog->owner[i] = owner[i];
-		i++;
-	}
-	dog->owner[i] = '\0';
-
+	_strcpy(dog->name, name);
+	_strcpy(dog->owner, owner);
 	dog->age = age;
 
 	return (dog);
