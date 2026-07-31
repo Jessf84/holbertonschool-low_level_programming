@@ -25,6 +25,7 @@ int check_num(char *str)
  * @argc: the number of command line arguments
  * @argv: and array containing the comand line arguments
  *
+ * Return: 0 on success, 1 on error (non-digit characters found)
  */
 int main(int argc, char *argv[])
 {
