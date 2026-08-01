@@ -16,7 +16,7 @@ int factorial(int n)
 
 
 	/* Vase case: Factorial of 0 is 1 */
-	if (n ==0)
+	if (n == 0)
 	{
 		return (1);
 	}
