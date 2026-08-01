@@ -29,7 +29,7 @@ int is_prime_number(int n)
  */
 int actual_prime(int n, int i)
 {
-	/* Base case 1: If i squared is greater than n, no divisors found (it's prime) */
+	/* Base case 1: If i squared greater than n, no divisors found (it's prime) */
 	if (i * i > n)
 	{
 		return (1);
@@ -42,5 +42,5 @@ int actual_prime(int n, int i)
 	}
 
 	/* Recursive step: Test the nect divisor */
-	return (actual_prime(n, i +1));
+	return (actual_prime(n, i + 1));
 }
