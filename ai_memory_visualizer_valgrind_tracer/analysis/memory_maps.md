@@ -1,45 +1,43 @@
-markdown# AI Memory Visualizer Analysis
+# AI Memory Visualizer Analysis
 
-## 1. Architectural Memory Foundations
-* **Stack Layout**: Extends downward via structured activation records (Stack Frames). Variables are bound explicitly to lexical blocks and auto-reclaimed upon scope termination.
-* **Heap Layout**: Extends upward via runtime allocator calls (`malloc`, `calloc`). Memory lifetimes persist independently of program layout until explicitly deallocated.
-* **Pointer & Aliasing Tracking**: Multiple reference handles accessing identical destination symbols or dynamic allocations, creating side-effect pathways.
+1. How Memory Works (In Simple Terms)
+* **Stack Memory**: This is automatic. When a function runs, it creates a temporary workspace for its variables. As soon as the function finishes, that workspace is completely wiped out.
+* **Heap Memory**: This is manual. If you ask for heap space using `malloc()`, it stays there forever until you explicitly say `free()`. If you forget, that memory gets trapped.
+* **Pointers & Aliasing**: A pointer is just an address card. If two pointers have the exact same address written on them, they are "aliases." Changing the data using one pointer changes what the other pointer sees too.
 
 ---
 
-## 2. Program Execution Memory Maps
+2. Program Execution Memory Maps
 
 ### Program 1: stack_example
-Tracks functional entry points and recursive local frames.
-Use code with caution.+-----------------------------------------------------------------+| STACK FRAMES                                                    ||                                                                 || [Frame: main]                                                   ||   - int local_val      [Addr: 0x7ffd0100] -> Value: 10          ||                                                                 || [Frame: recursion_step (Depth 1)]                               ||   - int depth_param    [Addr: 0x7ffd00e0] -> Value: 1           |+-----------------------------------------------------------------+| HEAP MEMORY                                                     ||   (Empty / No runtime dynamic allocations declared)             |+-----------------------------------------------------------------+* **Lifetimes**: `depth_param` explicitly drops out of scope at functional boundary termination. `local_val` remains alive until `main` yields execution control.
-* **Aliasing**: None. No pointers map to overlapping destinations.
+This program only uses basic, automatic variables.
+
+* **Aliasing**: None. No variables are sharing addresses.
 
 ### Program 2: heap_example
-Tracks active heap regions and clean manual deallocations.
-+-----------------------------------------------------------------+| STACK FRAMES                                                    || [Frame: main]                                                   ||   - int *heap_ptr      [Addr: 0x7ffd1200] -> Value: 0x55aa3000   |+-----------------------------------------------------------------+| HEAP MEMORY                                                     ||   - Block 0x55aa3000   Size: 4 Bytes      -> Value: 42          |+-----------------------------------------------------------------+* **Lifetimes**: `heap_ptr` stack address is dropped upon final return. The heap allocation at `0x55aa3000` safely ceases to exist immediately when `free(heap_ptr)` processes.
-* **Aliasing**: None. Singular tracked allocation layout.
+This program borrows space from the manual heap locker.
++-----------------------------------------------------------------+| STACK WORKSPACE (Temporary)                                     ||   - heap_ptr        (Address: 0x7ffd1200) -> Address: 0x55aa3000|+-----------------------------------------------------------------+| HEAP WORKSPACE (Manual Locker)                                  ||   - Box 0x55aa3000  Size: 4 Bytes         -> Value: 42          |+-----------------------------------------------------------------+* **Lifetimes**: The pointer variable `heap_ptr` disappears when the program ends, but the Box `0x55aa3000` stays locked until `free()` is called.
+* **Aliasing**: None.
 
 ### Program 3: aliasing_example
-Tracks multiple storage variables mapping to an identical data point.
-+-----------------------------------------------------------------+| STACK FRAMES                                                    || [Frame: main]                                                   ||   - int primary_val    [Addr: 0x7ffd5500] -> Value: 99          ||   - int *alias_ptr_1   [Addr: 0x7ffd5508] -> Value: 0x7ffd5500   ||   - int *alias_ptr_2   [Addr: 0x7ffd5510] -> Value: 0x7ffd5500   |+-----------------------------------------------------------------+| HEAP MEMORY                                                     ||   (Empty)                                                       |+-----------------------------------------------------------------+* **Lifetimes**: All structures share synchronous survival scopes dictated by the lifetime context of `main`.
-* **Aliasing**: Clear overlapping profiles. Writing a change such as `*alias_ptr_1 = 50` updates the destination value, directly altering what `*alias_ptr_2` tracks.
+Two pointers pointing to the exact same spot.
++-----------------------------------------------------------------+| STACK WORKSPACE (Temporary)                                     ||   - primary_val     (Address: 0x7ffd5500) -> Value: 99          ||   - alias_ptr_1     (Address: 0x7ffd5508) -> Address: 0x7ffd5500||   - alias_ptr_2     (Address: 0x7ffd5510) -> Address: 0x7ffd5500|+-----------------------------------------------------------------+| HEAP WORKSPACE (Manual Locker)                                  ||   (Empty)                                                       |+-----------------------------------------------------------------+* **Lifetimes**: Everything drops out of memory together when `main` finishes.
+* **Aliasing**: Since `alias_ptr_1` and `alias_ptr_2` both look at `primary_val`, changing `*alias_ptr_1 = 50` makes `*alias_ptr_2` see 50 as well.
 
 ### Program 4: crash_example
-Documents invalid reads or reference exceptions like dangling addresses.
-+-----------------------------------------------------------------+| STACK FRAMES                                                    || [Frame: main]                                                   ||   - int *dangling_ptr  [Addr: 0x7ffd9900] -> Value: 0x55aa4000   |+-----------------------------------------------------------------+| HEAP MEMORY                                                     ||   - Block 0x55aa4000   [STATUS: FREED]   -> Invalid Contents    |+-----------------------------------------------------------------+* **Lifetimes**: The backing memory block at `0x55aa4000` is reclaimed by the system allocator before the pointer variable lifecycle finishes.
-* **Aliasing**: `dangling_ptr` references a missing target. Running an assignment like `*dangling_ptr = 5` results in a crash or corruption.
+A broken pointer looking at a deleted locker.
++-----------------------------------------------------------------+| STACK WORKSPACE (Temporary)                                     ||   - dangling_ptr    (Address: 0x7ffd9900) -> Address: 0x55aa4000|+-----------------------------------------------------------------+| HEAP WORKSPACE (Manual Locker)                                  ||   - Box 0x55aa4000  [STATUS: DELETED/FREED]                     |+-----------------------------------------------------------------+* **Lifetimes**: The heap box was deleted early, leaving `dangling_ptr` looking at an empty, forbidden space.
+* **Aliasing**: The pointer is lost and broken. Trying to use it causes a crash.
 
 ---
 
-## 3. Mandatory AI Correction Showcase
+3. Spotting the AI Mistake
 
-### The AI's Initial Inaccurate Claim
-When evaluating `crash_example` or an array boundary loop, the AI model stated:
-> *"Setting a pointer to NULL after freeing it (e.g., `free(ptr); ptr = NULL;`) forces the operating system kernel to scrub the data contents on the physical RAM module immediately, keeping other applications from reading that block."*
+### What the AI Said:
+> *"When you type `p1 = NULL;`, the computer automatically cleans up and deletes the heap memory block for you so it doesn't leak."*
 
-### Why the AI Was Wrong
-* **Incorrect Assumption of Security Operations**: The AI combined language-level pointer management with operating system physical security policies. 
-* **Reality of C Memory Behavior**: Running `free()` yields block control back to the language allocator (`ptmalloc`, etc.), not the kernel directly. Setting a pointer to `NULL` modifies only the local pointer storage address on the stack. The actual dirty data bits sit unscrubbed in heap memory space until overwriting occurs naturally via successive future allocations.
+### Why the AI Was Wrong:
+The AI thought C acts like Python or Java, which cleans up after you automatically. In C, setting a pointer to `NULL` just wipes the address card in your hand. It does **not** clean up the heap locker. The locker stays stuck full of data, and because you threw away the address card, you can never unlock it again. This creates a **Memory Leak**.
 
-### How I Corrected It
-I manually corrected the map to show that freed bl
+### How I Fixed It:
+I changed the explanation to show that you must 
