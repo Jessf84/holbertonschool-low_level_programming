@@ -1,12 +1,11 @@
 #include "hash_tables.h"
 
 /**
- * hash_table_get - Retrieves a value associated with a key
+ * hash_table_get - Gets a value from a key
  * @ht: The hash table to look into
  * @key: The key you are looking for
  *
- * Return: The value associated with the element,
- *         or NULL if key couldn't be found
+ * Return: The value, or NULL if not found
  */
 char *hash_table_get(const hash_table_t *ht, const char *key)
 {
@@ -28,3 +27,4 @@ char *hash_table_get(const hash_table_t *ht, const char *key)
 
 	return (NULL);
 }
+
